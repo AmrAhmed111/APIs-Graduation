@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  title: 'API Project for Graduation'
+  version: 1.0.0
+paths:
+  /api/doctors-group/register:
+    post:
+      tags:
+        - 'Doctor Authentication'
+      summary: 'Register a new doctor'
+      operationId: b7823451ce89d57c4db5ce26faff60d5
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                firstName:
+                  description: 'First name of the doctor'
+                  type: string
+                  example: John
+                lastName:
+                  description: 'Last name of the doctor'
+                  type: string
+                  example: Doe
+                email:
+                  description: "Doctor's email"
+                  type: string
+                  format: email
+                  example: john.doe@example.com
+                password:
+                  description: "Doctor's password"
+                  type: string
+                  example: password123
+                spec_id:
+                  description: 'Specialization ID of the doctor'
+                  type: integer
+                  example: 1
+              type: object
+      responses:
+        '201':
+          description: 'Doctor registered successfully'
+          content:
+            application/json:
+              schema:
+                properties:
+                  doctor: { properties: { id: { type: integer, example: 1 }, firstName: { type: string, example: John }, lastName: { type: string, example: Doe }, email: { type: string, example: john.doe@example.com }, spec_id: { type: integer, example: 1 } }, type: object }
+                  message: { type: string, example: 'Doctor registered successfully' }
+                  status: { type: integer, example: 201 }
+                type: object
+        '403':
+          description: 'Unauthorized action'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'You are not authorized to register doctors.' }
+                  status: { type: integer, example: 403 }
+                type: object
+        '422':
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'The given data was invalid.' }
+                  errors: { type: object }
+                  status: { type: integer, example: 422 }
+                type: object
+  /api/doctors-group/login:
+    post:
+      tags:
+        - 'Doctor Authentication'
+      summary: 'Login a doctor'
+      operationId: f49431a22716fb487d0324429ec651c5
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  description: "Doctor's email"
+                  type: string
+                  format: email
+                  example: john.doe@example.com
+                password:
+                  description: "Doctor's password"
+                  type: string
+                  example: password123
+              type: object
+      responses:
+        '200':
+          description: 'Login successful'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Login successful' }
+                  status: { type: integer, example: 200 }
+                  token: { description: 'Sanctum authentication token', type: string, example: 1|randomtokenstring }
+                type: object
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'The email is incorrect. Please verify that this email is correct.' }
+                  errors: { type: object }
+                type: object
+        '422':
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'The given data was invalid.' }
+                  errors: { type: object }
+                type: object
+  /api/doctors-group/doctor/logout:
+    post:
+      tags:
+        - 'Doctor Authentication'
+      summary: 'Logout a doctor'
+      operationId: 26b0bb0561587874ce986848ae63b8bb
+      responses:
+        '200':
+          description: 'Doctor logged out successfully'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Doctor logged out successfully' }
+                  status: { type: integer, example: 200 }
+                type: object
+        '403':
+          description: 'Unauthorized action'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'You are not authorized to logout here..' }
+                  status: { type: integer, example: 403 }
+                type: object
+      security:
+        -
+          bearerAuth: []
+tags:
+  -
+    name: 'Doctor Authentication'
+    description: 'Doctor Authentication'
